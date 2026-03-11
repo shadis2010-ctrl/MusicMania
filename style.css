@@ -1,0 +1,76 @@
+:root { --accent: #2ecc71; --bg: #0d1a0d; --panel: #1a2e1a; --text: #e0ffe0; }
+
+.theme-black { --bg: #000; --panel: #111; --text: #fff; --accent: #1DB954; }
+.theme-white { --bg: #f8f8f8; --panel: #fff; --text: #222; --accent: #2ecc71; }
+.theme-blue { --bg: #0a192f; --panel: #112240; --text: #fff; --accent: #64ffda; }
+.theme-green { --bg: #0d1a0d; --panel: #1a2e1a; --text: #e0ffe0; --accent: #2ecc71; }
+.theme-red { --bg: #1a0d0d; --panel: #2e1a1a; --text: #fff; --accent: #ff4757; }
+.theme-purple { --bg: #120d1a; --panel: #201a2e; --text: #fff; --accent: #a29bfe; }
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
+body { 
+    margin: 0; font-family: -apple-system, system-ui, sans-serif; 
+    background: var(--bg); color: var(--text); transition: 0.3s; overflow: hidden; 
+}
+
+.app-container { height: 100vh; display: flex; flex-direction: column; }
+.mobile-header { padding: 15px; text-align: center; flex-shrink: 0; }
+.logo { font-family: 'Arial Black', sans-serif; font-size: 22px; text-transform: uppercase; }
+.logo span { color: #2ecc71; }
+
+.player-screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+.vinyl-wrapper { margin-bottom: 30px; }
+.vinyl { 
+    width: 260px; height: 260px; border-radius: 50%; background: repeating-radial-gradient(#222, #111 10%, #222 15%);
+    border: 8px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    animation: rotate 8s linear infinite; animation-play-state: paused;
+}
+.vinyl-center { width: 60px; height: 60px; background: var(--accent); border-radius: 50%; border: 4px solid #111; margin: 92px auto; color: #000; font-weight: bold; text-align: center; line-height: 52px; font-size: 14px;}
+
+@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.track-info { text-align: center; margin-bottom: 20px; width: 100%; }
+.track-info h2 { font-size: 18px; margin: 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 10px;}
+.track-info p { opacity: 0.6; font-size: 13px; margin: 0 0 10px; }
+
+.action-btn { background: none; border: 2px solid var(--accent); color: var(--accent); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; transition: 0.2s; font-size: 18px;}
+
+.controls-section { width: 100%; max-width: 350px; }
+.main-btns { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 20px 0; }
+.main-btns button { background: none; border: none; color: var(--text); font-size: 30px; cursor: pointer;}
+.play-trigger { font-size: 60px !important; color: var(--accent) !important; }
+
+.progress-block, .volume-block { display: flex; align-items: center; gap: 10px; font-size: 11px; margin-bottom: 15px;}
+input[type=range] { flex: 1; accent-color: var(--accent); cursor: pointer; }
+
+/* Панели */
+.side-panel {
+    position: fixed; top: 0; left: -100%; width: 100%; height: 100%;
+    background: var(--panel); z-index: 100; transition: 0.4s ease-in-out;
+    padding: 20px; display: flex; flex-direction: column;
+}
+.side-panel.active { left: 0; }
+.panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.panel-header button { background: none; border: none; color: var(--text); font-size: 35px; }
+
+.search-box { display: flex; gap: 10px; margin-bottom: 20px; }
+.search-box input { flex: 1; padding: 12px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: #fff; }
+.search-box button { background: var(--accent); border: none; padding: 0 15px; border-radius: 10px; color: #000; }
+
+.results-list, #playlist-container { flex: 1; overflow-y: auto; list-style: none; padding: 0; }
+.search-item, #playlist-container li { 
+    display: flex; align-items: center; gap: 10px; padding: 12px; 
+    background: rgba(255,255,255,0.05); margin-bottom: 10px; border-radius: 10px;
+}
+
+.theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+.t-btn { height: 70px; border-radius: 15px; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; }
+
+.tab-bar { 
+    height: 75px; background: var(--panel); border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex; justify-content: space-around; align-items: center; flex-shrink: 0;
+}
+.tab-bar button { background: none; border: none; color: var(--text); display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: 0.6; cursor: pointer;}
+.tab-bar button i { font-size: 22px; }
+.tab-bar button span { font-size: 10px; }

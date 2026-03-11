@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MusicMania Mobile</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="theme-green">
+    
+    <div class="app-container">
+        <header class="mobile-header">
+            <div class="logo">Music<span>Mania</span></div>
+        </header>
+
+        <main class="player-screen">
+            <div class="vinyl-wrapper">
+                <div id="vinyl-disk" class="vinyl">
+                    <div class="vinyl-center">MM</div>
+                </div>
+            </div>
+            
+            <div class="track-info">
+                <h2 id="player-title">Готов к музыке</h2>
+                <p id="player-author">MusicMania Mobile</p>
+                <button id="toggle-playlist-btn" class="action-btn"><i class="fas fa-plus"></i></button>
+            </div>
+
+            <div class="controls-section">
+                <div class="progress-block">
+                    <span id="current-time">0:00</span>
+                    <input type="range" id="progress-bar" min="0" max="100" value="0">
+                    <span id="duration">0:00</span>
+                </div>
+
+                <div class="main-btns">
+                    <button id="prev-btn"><i class="fas fa-step-backward"></i></button>
+                    <button id="play-btn" class="play-trigger"><i class="fas fa-play"></i></button>
+                    <button id="next-btn"><i class="fas fa-step-forward"></i></button>
+                </div>
+
+                <div class="volume-block">
+                    <i class="fas fa-volume-down"></i>
+                    <input type="range" id="volume-slider" min="0" max="100" value="70">
+                </div>
+            </div>
+        </main>
+
+        <div id="side-search" class="side-panel">
+            <div class="panel-header">
+                <h3>Поиск</h3>
+                <button onclick="togglePanel('side-search')">&times;</button>
+            </div>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Артист, трек...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <div id="search-results" class="results-list"></div>
+        </div>
+
+        <div id="side-playlist" class="side-panel">
+            <div class="panel-header">
+                <h3>Плейлист</h3>
+                <button onclick="togglePanel('side-playlist')">&times;</button>
+            </div>
+            <ul id="playlist-container"></ul>
+        </div>
+
+        <div id="side-themes" class="side-panel">
+            <div class="panel-header">
+                <h3>Темы</h3>
+                <button onclick="togglePanel('side-themes')">&times;</button>
+            </div>
+            <div class="theme-grid">
+                <button onclick="setTheme('black')" class="t-btn" style="background: #1DB954;"></button>
+                <button onclick="setTheme('white')" class="t-btn" style="background: #ffffff;"></button>
+                <button onclick="setTheme('blue')" class="t-btn" style="background: #001f3f;"></button>
+                <button onclick="setTheme('green')" class="t-btn" style="background: #2ecc71;"></button>
+                <button onclick="setTheme('red')" class="t-btn" style="background: #ff4757;"></button>
+                <button onclick="setTheme('purple')" class="t-btn" style="background: #a29bfe;"></button>
+            </div>
+        </div>
+
+        <nav class="tab-bar">
+            <button onclick="togglePanel('side-search')"><i class="fas fa-search"></i><span>Поиск</span></button>
+            <button onclick="togglePanel('side-playlist')"><i class="fas fa-list"></i><span>Треки</span></button>
+            <button onclick="togglePanel('side-themes')"><i class="fas fa-palette"></i><span>Темы</span></button>
+        </nav>
+    </div>
+
+    <div id="youtube-engine" style="display:none"></div>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="script.js"></script>
+</body>
+</html>
