@@ -2,10 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>MusicMania App</title>
+    <title>MusicMania Mobile</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -25,7 +25,7 @@
             
             <div class="track-info">
                 <h2 id="player-title">Готов к музыке</h2>
-                <p id="player-author">Выберите трек</p>
+                <p id="player-author">MusicMania Mobile</p>
                 <button id="toggle-playlist-btn" class="action-btn"><i class="fas fa-plus"></i></button>
             </div>
 
@@ -41,12 +41,7 @@
                     <button id="play-btn" class="play-trigger"><i class="fas fa-play"></i></button>
                     <button id="next-btn"><i class="fas fa-step-forward"></i></button>
                 </div>
-
-                <div class="volume-block">
-                    <i class="fas fa-volume-down"></i>
-                    <input type="range" id="volume-slider" min="0" max="100" value="70">
                 </div>
-            </div>
         </main>
 
         <div id="side-search" class="side-panel">
@@ -55,7 +50,7 @@
                 <button onclick="togglePanel('side-search')">&times;</button>
             </div>
             <div class="search-box">
-                <input type="text" id="search-input" placeholder="Артист или трек...">
+                <input type="text" id="search-input" placeholder="Найти музыку...">
                 <button id="search-btn"><i class="fas fa-search"></i></button>
             </div>
             <div id="search-results" class="results-list"></div>
@@ -86,7 +81,7 @@
 
         <nav class="tab-bar">
             <button onclick="togglePanel('side-search')"><i class="fas fa-search"></i><span>Поиск</span></button>
-            <button onclick="togglePanel('side-playlist')"><i class="fas fa-list"></i><span>Треки</span></button>
+            <button onclick="togglePanel('side-playlist')"><i class="fas fa-list"></i><span>Плейлист</span></button>
             <button onclick="togglePanel('side-themes')"><i class="fas fa-palette"></i><span>Темы</span></button>
         </nav>
     </div>

@@ -17,63 +17,55 @@ body {
 
 .app-container { height: 100vh; display: flex; flex-direction: column; position: relative; }
 
-.mobile-header { padding: 15px; text-align: center; flex-shrink: 0; z-index: 10; }
-.logo { font-family: 'Arial Black', sans-serif; font-size: 22px; text-transform: uppercase; }
+.mobile-header { padding: 10px; text-align: center; flex-shrink: 0; padding-top: env(safe-area-inset-top); }
+.logo { font-family: 'Arial Black', sans-serif; font-size: 20px; text-transform: uppercase; }
 .logo span { color: #2ecc71; }
 
-.player-screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 5; }
+.player-screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; }
 
 .vinyl { 
-    width: 260px; height: 260px; border-radius: 50%; background: repeating-radial-gradient(#222, #111 10%, #222 15%);
+    width: 240px; height: 240px; border-radius: 50%; background: repeating-radial-gradient(#222, #111 10%, #222 15%);
     border: 8px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     animation: rotate 8s linear infinite; animation-play-state: paused;
 }
-.vinyl-center { width: 60px; height: 60px; background: var(--accent); border-radius: 50%; border: 4px solid #111; margin: 92px auto; color: #000; font-weight: bold; text-align: center; line-height: 52px; font-size: 14px; }
+.vinyl-center { width: 50px; height: 50px; background: var(--accent); border-radius: 50%; border: 4px solid #111; margin: 87px auto; color: #000; font-weight: bold; text-align: center; line-height: 42px; font-size: 12px; }
 
 @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-.track-info { text-align: center; margin-bottom: 20px; width: 100%; }
+.track-info { text-align: center; margin-bottom: 10px; width: 100%; }
 .track-info h2 { font-size: 18px; margin: 10px 0; padding: 0 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .track-info p { opacity: 0.6; font-size: 13px; }
 
-.action-btn { background: none; border: 2px solid var(--accent); color: var(--accent); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 18px; margin-top: 10px; }
+.action-btn { background: none; border: 2px solid var(--accent); color: var(--accent); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 16px; }
 
-.controls-section { width: 100%; max-width: 350px; }
-.main-btns { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 20px 0; }
-.main-btns button { background: none; border: none; color: var(--text); font-size: 30px; }
-.play-trigger { font-size: 60px !important; color: var(--accent) !important; }
+.controls-section { width: 100%; max-width: 350px; padding: 0 20px; }
+.main-btns { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 10px 0; }
+.main-btns button { background: none; border: none; color: var(--text); font-size: 28px; }
+.play-trigger { font-size: 55px !important; color: var(--accent) !important; }
 
-.progress-block, .volume-block { display: flex; align-items: center; gap: 10px; font-size: 11px; margin-bottom: 10px; }
-input[type=range] { flex: 1; accent-color: var(--accent); }
+.progress-block { display: flex; align-items: center; gap: 10px; font-size: 10px; margin-bottom: 5px; }
+input[type=range] { flex: 1; accent-color: var(--accent); height: 6px; }
 
-/* ПАНЕЛИ - ИСПРАВЛЕНО */
+/* ПАНЕЛИ */
 .side-panel {
-    position: absolute; top: 0; left: -100%; width: 100%; height: calc(100% - 75px);
-    background: var(--panel); z-index: 1000; transition: 0.4s ease;
+    position: absolute; top: 0; left: -100%; width: 100%; height: calc(100% - 85px);
+    background: var(--panel); z-index: 1000; transition: 0.3s ease-out;
     padding: 20px; display: flex; flex-direction: column;
 }
 .side-panel.active { left: 0; }
 
-.panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.panel-header button { background: none; border: none; color: var(--text); font-size: 35px; }
-
-.search-box { display: flex; gap: 10px; margin-bottom: 20px; }
-.search-box input { flex: 1; padding: 12px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: #fff; }
-.search-box button { background: var(--accent); border: none; padding: 0 15px; border-radius: 10px; }
-
-.results-list, #playlist-container { flex: 1; overflow-y: auto; list-style: none; padding: 0; }
-.search-item, #playlist-container li { 
-    display: flex; align-items: center; gap: 10px; padding: 12px; 
-    background: rgba(255,255,255,0.05); margin-bottom: 10px; border-radius: 10px;
-}
-
-.theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-.t-btn { height: 70px; border-radius: 15px; border: 2px solid rgba(255,255,255,0.1); }
-
 .tab-bar { 
-    height: 75px; background: var(--panel); border-top: 1px solid rgba(255,255,255,0.1);
-    display: flex; justify-content: space-around; align-items: center; z-index: 1001;
+    height: 85px; /* Увеличили высоту */
+    background: var(--panel); border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex; justify-content: space-around; align-items: center; 
+    z-index: 1001;
+    padding-bottom: env(safe-area-inset-bottom); /* Отступ для полоски iPhone */
 }
-.tab-bar button { background: none; border: none; color: var(--text); display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: 0.6; }
+.tab-bar button { background: none; border: none; color: var(--text); display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: 0.6; padding: 10px; }
 .tab-bar button i { font-size: 22px; }
 .tab-bar button span { font-size: 10px; }
+
+.results-list, #playlist-container { flex: 1; overflow-y: auto; list-style: none; padding: 0; }
+.search-item, #playlist-container li { display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(255,255,255,0.05); margin-bottom: 8px; border-radius: 10px; }
+.theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.t-btn { height: 60px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
