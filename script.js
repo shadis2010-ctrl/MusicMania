@@ -23,31 +23,20 @@ function setTheme(name) {
     togglePanel(''); 
 }
 
-// Поиск с обработкой ошибок
 document.getElementById('search-btn').onclick = async () => {
     const q = document.getElementById('search-input').value;
     if(!q) return;
     try {
-        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(q)}&type=video&key=${API_KEY}`;
-        const res = await fetch(url);
+        const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(q)}&type=video&key=${API_KEY}`);
         const data = await res.json();
-        
-        if (data.error) {
-            console.error("API Error:", data.error.message);
-            alert("Ошибка API: " + data.error.message);
-            return;
-        }
+        if(data.error) { alert("Ошибка API: " + data.error.message); return; }
         renderResults(data.items);
-    } catch (e) { 
-        console.error("Fetch error:", e);
-        alert("Проблема с сетью или API"); 
-    }
+    } catch (e) { alert("Ошибка сети"); }
 };
 
 function renderResults(items) {
     const container = document.getElementById('search-results');
     container.innerHTML = '';
-    if (!items) return;
     items.forEach(item => {
         const id = item.id.videoId;
         const title = item.snippet.title.replace(/'/g, "");
@@ -55,7 +44,7 @@ function renderResults(items) {
         div.className = 'search-item';
         div.innerHTML = `
             <img src="${item.snippet.thumbnails.default.url}" style="width:50px; border-radius:6px">
-            <div style="flex:1; font-size:12px; font-weight:bold; overflow:hidden">${title.slice(0,30)}</div>
+            <div style="flex:1; font-size:12px; font-weight:bold">${title.slice(0,30)}</div>
             <button onclick="event.stopPropagation(); handlePlaylistToggle('${id}', '${title}')" 
                     style="background:var(--accent); border:none; border-radius:6px; padding:6px; font-size:10px; font-weight:bold">
                 ${myPlaylist.find(t => t.id === id) ? 'Убрать' : 'Добавить'}
@@ -84,7 +73,7 @@ function renderPlaylist() {
     container.innerHTML = myPlaylist.map((t, index) => 
         `<li>
             <span style="color:var(--accent); font-weight:bold; margin-right:10px">${index + 1}</span>
-            <span onclick="playFromPlaylist(${index})" style="flex:1; overflow:hidden">${t.title.slice(0, 25)}...</span>
+            <span onclick="playFromPlaylist(${index})" style="flex:1">${t.title.slice(0, 30)}...</span>
             <button onclick="event.stopPropagation(); handlePlaylistToggle('${t.id}', '')" 
                     style="background:none; border:none; color:#ff4757; font-size:20px">&times;</button>
         </li>`
