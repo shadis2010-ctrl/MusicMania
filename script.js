@@ -6,8 +6,25 @@ let currentPlayingId = '';
 
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('youtube-engine', {
+        playerVars: { 'playsinline': 1, 'controls': 0 },
         events: { 'onStateChange': onStateChange, 'onReady': startTick }
     });
+}
+
+// Media Session для управления с экрана блокировки iPhone
+function updateMediaMetadata(title) {
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: title,
+            artist: 'MusicMania',
+            artwork: [{ src: 'https://cdn-icons-png.flaticon.com/512/3844/3844724.png', sizes: '512x512', type: 'image/png' }]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => player.playVideo());
+        navigator.mediaSession.setActionHandler('pause', () => player.pauseVideo());
+        navigator.mediaSession.setActionHandler('previoustrack', () => document.getElementById('prev-btn').click());
+        navigator.mediaSession.setActionHandler('nexttrack', () => document.getElementById('next-btn').click());
+    }
 }
 
 function togglePanel(panelId) {
@@ -29,7 +46,7 @@ document.getElementById('search-btn').onclick = async () => {
     try {
         const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(q)}&type=video&key=${API_KEY}`);
         const data = await res.json();
-        if(data.error) { alert("Ошибка API: " + data.error.message); return; }
+        if(data.error) { alert("API Error: " + data.error.message); return; }
         renderResults(data.items);
     } catch (e) { alert("Ошибка сети"); }
 };
@@ -46,7 +63,7 @@ function renderResults(items) {
             <img src="${item.snippet.thumbnails.default.url}" style="width:50px; border-radius:6px">
             <div style="flex:1; font-size:12px; font-weight:bold">${title.slice(0,30)}</div>
             <button onclick="event.stopPropagation(); handlePlaylistToggle('${id}', '${title}')" 
-                    style="background:var(--accent); border:none; border-radius:6px; padding:6px; font-size:10px; font-weight:bold">
+                    style="background:var(--accent); border:none; border-radius:6px; padding:8px; font-size:10px; font-weight:bold">
                 ${myPlaylist.find(t => t.id === id) ? 'Убрать' : 'Добавить'}
             </button>
         `;
@@ -75,7 +92,7 @@ function renderPlaylist() {
             <span style="color:var(--accent); font-weight:bold; margin-right:10px">${index + 1}</span>
             <span onclick="playFromPlaylist(${index})" style="flex:1">${t.title.slice(0, 30)}...</span>
             <button onclick="event.stopPropagation(); handlePlaylistToggle('${t.id}', '')" 
-                    style="background:none; border:none; color:#ff4757; font-size:20px">&times;</button>
+                    style="background:none; border:none; color:#ff4757; font-size:22px">&times;</button>
         </li>`
     ).join('');
 }
@@ -87,6 +104,7 @@ function playMusic(id, title) {
         document.getElementById('player-title').innerText = title;
         currentTrackIndex = myPlaylist.findIndex(t => t.id === id);
         updateActionBtn();
+        updateMediaMetadata(title);
     }
 }
 
