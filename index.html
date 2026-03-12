@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="referrer" content="no-referrer-when-downgrade">
-    <title>MusicMania Debug</title>
+    <title>MusicMania Mobile</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -25,8 +24,8 @@
             </div>
             
             <div class="track-info">
-                <h2 id="player-title">Фоновый тест</h2>
-                <p id="player-author">Нажми Play</p>
+                <h2 id="player-title">Готов к музыке</h2>
+                <p id="player-author">MusicMania Mobile</p>
                 <button id="toggle-playlist-btn" class="action-btn"><i class="fas fa-plus"></i></button>
             </div>
 
@@ -45,6 +44,41 @@
             </div>
         </main>
 
+        <div id="side-search" class="side-panel">
+            <div class="panel-header">
+                <h3>Поиск</h3>
+                <button onclick="togglePanel('side-search')">&times;</button>
+            </div>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Найти музыку...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <div id="search-results" class="results-list"></div>
+        </div>
+
+        <div id="side-playlist" class="side-panel">
+            <div class="panel-header">
+                <h3>Плейлист</h3>
+                <button onclick="togglePanel('side-playlist')">&times;</button>
+            </div>
+            <ul id="playlist-container"></ul>
+        </div>
+
+        <div id="side-themes" class="side-panel">
+            <div class="panel-header">
+                <h3>Темы</h3>
+                <button onclick="togglePanel('side-themes')">&times;</button>
+            </div>
+            <div class="theme-grid">
+                <button onclick="setTheme('black')" class="t-btn" style="background: #1DB954;"></button>
+                <button onclick="setTheme('white')" class="t-btn" style="background: #ffffff;"></button>
+                <button onclick="setTheme('blue')" class="t-btn" style="background: #001f3f;"></button>
+                <button onclick="setTheme('green')" class="t-btn" style="background: #2ecc71;"></button>
+                <button onclick="setTheme('red')" class="t-btn" style="background: #ff4757;"></button>
+                <button onclick="setTheme('purple')" class="t-btn" style="background: #a29bfe;"></button>
+            </div>
+        </div>
+
         <nav class="tab-bar">
             <button onclick="togglePanel('side-search')"><i class="fas fa-search"></i><span>Поиск</span></button>
             <button onclick="togglePanel('side-playlist')"><i class="fas fa-list"></i><span>Треки</span></button>
@@ -52,33 +86,7 @@
         </nav>
     </div>
 
-    <div id="side-search" class="side-panel">
-        <div class="panel-header"><h3>Поиск</h3><button onclick="togglePanel('side-search')">&times;</button></div>
-        <div class="search-box">
-            <input type="text" id="search-input" placeholder="Найти...">
-            <button id="search-btn"><i class="fas fa-search"></i></button>
-        </div>
-        <div id="search-results" class="results-list"></div>
-    </div>
-
-    <div id="side-playlist" class="side-panel">
-        <div class="panel-header"><h3>Плейлист</h3><button onclick="togglePanel('side-playlist')">&times;</button></div>
-        <ul id="playlist-container"></ul>
-    </div>
-
-    <div id="side-themes" class="side-panel">
-        <div class="panel-header"><h3>Темы</h3><button onclick="togglePanel('side-themes')">&times;</button></div>
-        <div class="theme-grid">
-            <button onclick="setTheme('black')" class="t-btn" style="background: #1DB954;"></button>
-            <button onclick="setTheme('green')" class="t-btn" style="background: #2ecc71;"></button>
-        </div>
-    </div>
-
     <div id="youtube-engine" style="display:none"></div>
-    <audio id="silent-audio" loop preload="auto" style="display:none">
-        <source src="silence.mp3" type="audio/mpeg">
-    </audio>
-
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="script.js"></script>
 </body>
