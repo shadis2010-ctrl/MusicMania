@@ -17,7 +17,8 @@
         </header>
 
         <main class="player-screen">
-            <div id="glow-wrapper" class="vinyl-wrapper">
+            <div class="vinyl-wrapper">
+                <div id="vinyl-glow" class="vinyl-glow"></div>
                 <div id="vinyl-disk" class="vinyl">
                     <div class="vinyl-center">MM</div>
                 </div>
@@ -47,7 +48,7 @@
         <div id="side-search" class="side-panel">
             <div class="panel-header">
                 <h3>Поиск</h3>
-                <button class="close-btn" onclick="togglePanel('side-search')">&times;</button>
+                <button onclick="togglePanel('side-search')">&times;</button>
             </div>
             <div class="search-box">
                 <input type="text" id="search-input" placeholder="Найти музыку...">
@@ -59,7 +60,7 @@
         <div id="side-playlist" class="side-panel">
             <div class="panel-header">
                 <h3>Плейлист</h3>
-                <button class="close-btn" onclick="togglePanel('side-playlist')">&times;</button>
+                <button onclick="togglePanel('side-playlist')">&times;</button>
             </div>
             <ul id="playlist-container"></ul>
         </div>
@@ -67,7 +68,7 @@
         <div id="side-themes" class="side-panel">
             <div class="panel-header">
                 <h3>Темы</h3>
-                <button class="close-btn" onclick="togglePanel('side-themes')">&times;</button>
+                <button onclick="togglePanel('side-themes')">&times;</button>
             </div>
             <div class="theme-grid">
                 <button onclick="setTheme('black')" class="t-btn" style="background: #1DB954;"></button>

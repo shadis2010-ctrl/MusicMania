@@ -23,7 +23,6 @@ function setTheme(name) {
     togglePanel(''); 
 }
 
-// Поиск
 document.getElementById('search-btn').onclick = async () => {
     const q = document.getElementById('search-input').value;
     if(!q) return;
@@ -31,13 +30,23 @@ document.getElementById('search-btn').onclick = async () => {
         const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(q)}&type=video&key=${API_KEY}`;
         const res = await fetch(url);
         const data = await res.json();
-        if (data.items) renderResults(data.items);
-    } catch (e) { alert("Ошибка API или сети"); }
+        
+        if (data.error) {
+            console.error("API Error:", data.error.message);
+            alert("Ошибка API: " + data.error.message);
+            return;
+        }
+        renderResults(data.items);
+    } catch (e) { 
+        console.error("Fetch error:", e);
+        alert("Проблема с сетью или API"); 
+    }
 };
 
 function renderResults(items) {
     const container = document.getElementById('search-results');
     container.innerHTML = '';
+    if (!items) return;
     items.forEach(item => {
         const id = item.id.videoId;
         const title = item.snippet.title.replace(/'/g, "");
@@ -70,6 +79,7 @@ function saveAndRender() {
 
 function renderPlaylist() {
     const container = document.getElementById('playlist-container');
+    if (!container) return;
     container.innerHTML = myPlaylist.map((t, index) => 
         `<li>
             <span style="color:var(--accent); font-weight:bold; margin-right:10px">${index + 1}</span>
@@ -124,24 +134,26 @@ document.getElementById('progress-bar').oninput = function() {
 };
 
 function formatTime(sec) {
-    const m = Math.floor(sec / 60); const s = Math.floor(sec % 60);
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
     return `${m}:${s < 10 ? '0' : ''}${s}`;
 }
 
 function onStateChange(event) {
     const disk = document.getElementById('vinyl-disk');
-    const wrapper = document.getElementById('glow-wrapper');
+    const glow = document.getElementById('vinyl-glow');
     const btn = document.getElementById('play-btn');
     
     if (event.data == 1) { 
         disk.style.animationPlayState = 'running'; 
-        wrapper.classList.add('playing-glow');
+        glow.classList.add('playing');
         btn.innerHTML = '<i class="fas fa-pause-circle"></i>'; 
     } else { 
         disk.style.animationPlayState = 'paused'; 
-        wrapper.classList.remove('playing-glow');
+        glow.classList.remove('playing');
         btn.innerHTML = '<i class="fas fa-play-circle"></i>'; 
     }
+    
     if (event.data == 0 && currentTrackIndex < myPlaylist.length - 1) playFromPlaylist(currentTrackIndex + 1);
 }
 
