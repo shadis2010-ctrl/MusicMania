@@ -1,6 +1,5 @@
 const API_KEY = 'AIzaSyB780t5uL3VGWS-frrluarI_H-VMO7NoJA'; 
 let player;
-// Новая структура: объект с плейлистами
 let allPlaylists = JSON.parse(localStorage.getItem('allPlaylists')) || { "Главный": [] };
 let currentPlaylistName = localStorage.getItem('lastPlaylist') || "Главный";
 let currentTrackIndex = -1;
@@ -23,20 +22,23 @@ function togglePanel(panelId) {
 function setTheme(name) {
     document.body.className = 'theme-' + name;
     document.getElementById('dark-mode-toggle').checked = (name !== 'white');
+    const root = document.querySelector(':root');
+    const colors = { 'blue': '#64ffda', 'green': '#2ecc71', 'red': '#ff4757', 'purple': '#a29bfe', 'yellow': '#f1c40f', 'black': '#1DB954' };
+    if(colors[name]) root.style.setProperty('--accent', colors[name]);
 }
 
 function toggleDarkWhite(isDark) {
     setTheme(isDark ? 'black' : 'white');
 }
 
-// Поиск
 document.getElementById('search-btn').onclick = async () => {
     const q = document.getElementById('search-input').value;
     if(!q) return;
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(q)}&type=video&key=${API_KEY}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    renderResults(data.items);
+    try {
+        const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(q)}&type=video&key=${API_KEY}`);
+        const data = await res.json();
+        renderResults(data.items);
+    } catch (e) { alert("Ошибка сети"); }
 };
 
 function renderResults(items) {
@@ -48,22 +50,19 @@ function renderResults(items) {
         const div = document.createElement('div');
         div.className = 'search-item';
         div.innerHTML = `
-            <img src="${item.snippet.thumbnails.default.url}" style="width:50px; border-radius:6px">
-            <div style="flex:1; font-size:12px; font-weight:bold">${title.slice(0,30)}</div>
-            <button onclick="event.stopPropagation(); showAddToPlaylistMenu('${id}', '${title}')" style="background:var(--accent); border:none; border-radius:6px; padding:6px; font-size:10px; font-weight:bold">+</button>
+            <img src="${item.snippet.thumbnails.default.url}" style="width:40px; border-radius:5px">
+            <div style="flex:1; font-size:11px; font-weight:bold">${title.slice(0,30)}</div>
+            <button onclick="event.stopPropagation(); showAddToPlaylistMenu('${id}', '${title}')" style="background:var(--accent); border:none; border-radius:5px; padding:5px">+</button>
         `;
         div.onclick = () => playMusic(id, title);
         container.appendChild(div);
     });
 }
 
-// Множественные плейлисты
 function showAddToPlaylistMenu(id, title) {
     const container = document.getElementById('playlists-to-choose');
     container.innerHTML = Object.keys(allPlaylists).map(name => `
-        <div class="search-item" onclick="addToSpecificPlaylist('${name}', '${id}', '${title}')">
-            <span>${name}</span>
-        </div>
+        <div class="search-item" onclick="addToSpecificPlaylist('${name}', '${id}', '${title}')"><span>${name}</span></div>
     `).join('');
     togglePanel('add-to-playlist-popup');
 }
@@ -99,9 +98,7 @@ function saveData() {
 
 function updatePlaylistSelectors() {
     const sel = document.getElementById('playlist-selector');
-    sel.innerHTML = Object.keys(allPlaylists).map(name => 
-        `<option value="${name}" ${name === currentPlaylistName ? 'selected' : ''}>${name}</option>`
-    ).join('');
+    sel.innerHTML = Object.keys(allPlaylists).map(name => `<option value="${name}" ${name === currentPlaylistName ? 'selected' : ''}>${name}</option>`).join('');
 }
 
 function renderPlaylist() {
@@ -109,9 +106,8 @@ function renderPlaylist() {
     const list = allPlaylists[currentPlaylistName] || [];
     container.innerHTML = list.map((t, index) => `
         <li>
-            <span style="color:var(--accent); font-weight:bold; margin-right:10px">${index + 1}</span>
-            <span onclick="playFromPlaylist(${index})" style="flex:1">${t.title.slice(0, 25)}...</span>
-            <button onclick="removeFromPlaylist(${index})" style="background:none; border:none; color:#ff4757; font-size:20px">&times;</button>
+            <span onclick="playFromPlaylist(${index})" style="flex:1">${t.title.slice(0, 30)}</span>
+            <button onclick="removeFromPlaylist(${index})" style="background:none; border:none; color:#ff4757">&times;</button>
         </li>
     `).join('');
 }
@@ -143,21 +139,11 @@ function playFromPlaylist(index) {
 function onStateChange(event) {
     const disk = document.getElementById('vinyl-disk');
     const btn = document.getElementById('play-btn');
-    if (event.data == 1) { 
-        disk.classList.add('playing'); 
-        btn.innerHTML = '<i class="fas fa-pause-circle"></i>'; 
-    } else { 
-        disk.classList.remove('playing'); 
-        btn.innerHTML = '<i class="fas fa-play-circle"></i>'; 
-    }
-    // Автонекст
-    if (event.data == 0) {
-        const list = allPlaylists[currentPlaylistName];
-        if (currentTrackIndex < list.length - 1) playFromPlaylist(currentTrackIndex + 1);
-    }
+    if (event.data == 1) { disk.classList.add('playing'); btn.innerHTML = '<i class="fas fa-pause-circle"></i>'; }
+    else { disk.classList.remove('playing'); btn.innerHTML = '<i class="fas fa-play-circle"></i>'; }
+    if (event.data == 0) playFromPlaylist(currentTrackIndex + 1);
 }
 
-// Стандартные контроли
 function startTick() {
     setInterval(() => {
         if (player && player.getCurrentTime) {
@@ -172,23 +158,15 @@ function startTick() {
     }, 1000);
 }
 
-document.getElementById('play-btn').onclick = () => {
-    player.getPlayerState() == 1 ? player.pauseVideo() : player.playVideo();
-};
-
+document.getElementById('play-btn').onclick = () => { player.getPlayerState() == 1 ? player.pauseVideo() : player.playVideo(); };
 document.getElementById('next-btn').onclick = () => playFromPlaylist(currentTrackIndex + 1);
 document.getElementById('prev-btn').onclick = () => playFromPlaylist(currentTrackIndex - 1);
-document.getElementById('add-to-list-btn').onclick = () => {
-    const title = document.getElementById('player-title').innerText;
-    if (currentPlayingId) showAddToPlaylistMenu(currentPlayingId, title);
-};
+document.getElementById('add-to-list-btn').onclick = () => { if (currentPlayingId) showAddToPlaylistMenu(currentPlayingId, document.getElementById('player-title').innerText); };
 
 function formatTime(sec) {
-    const m = Math.floor(sec / 60);
-    const s = Math.floor(sec % 60);
+    const m = Math.floor(sec / 60); const s = Math.floor(sec % 60);
     return `${m}:${s < 10 ? '0' : ''}${s}`;
 }
 
-// Инициализация
 updatePlaylistSelectors();
 renderPlaylist();

@@ -17,7 +17,8 @@
         </header>
 
         <main class="player-screen">
-            <div class="player-content"> <div class="vinyl-wrapper">
+            <div class="player-content">
+                <div class="vinyl-wrapper">
                     <div id="vinyl-disk" class="vinyl">
                         <div class="vinyl-center">MM</div>
                     </div>
@@ -60,7 +61,7 @@
                 <button onclick="createNewPlaylist()" class="mini-btn">New +</button>
                 <button onclick="togglePanel('side-playlist')">&times;</button>
             </div>
-            <ul id="playlist-container"></ul>
+            <ul id="playlist-container" class="results-list"></ul>
         </div>
 
         <div id="side-themes" class="side-panel">
@@ -77,6 +78,7 @@
                 <button onclick="setTheme('green')" class="t-btn" style="background: #2ecc71;"></button>
                 <button onclick="setTheme('red')" class="t-btn" style="background: #ff4757;"></button>
                 <button onclick="setTheme('purple')" class="t-btn" style="background: #a29bfe;"></button>
+                <button onclick="setTheme('yellow')" class="t-btn" style="background: #f1c40f;"></button>
             </div>
         </div>
 
