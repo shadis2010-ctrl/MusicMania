@@ -27,7 +27,9 @@
                 <div class="track-info">
                     <h2 id="player-title">Готов к музыке</h2>
                     <p id="player-author">MusicMania Pro</p>
-                    <button id="add-to-list-btn" class="action-btn"><i class="fas fa-plus"></i></button>
+                    <button id="add-to-list-btn" class="main-add-btn">
+                        <i class="fas fa-plus"></i>
+                    </button>
                 </div>
 
                 <div class="controls-section">
@@ -47,7 +49,10 @@
         </main>
 
         <div id="side-search" class="side-panel">
-            <div class="panel-header"><h3>Поиск</h3><button onclick="togglePanel('side-search')">&times;</button></div>
+            <div class="panel-header">
+                <h3>Поиск</h3>
+                <button class="close-panel-btn" onclick="togglePanel('side-search')"><i class="fas fa-times"></i></button>
+            </div>
             <div class="search-box">
                 <input type="text" id="search-input" placeholder="Найти музыку...">
                 <button id="search-btn"><i class="fas fa-search"></i></button>
@@ -58,14 +63,17 @@
         <div id="side-playlist" class="side-panel">
             <div class="panel-header">
                 <select id="playlist-selector" onchange="switchPlaylist(this.value)"></select>
-                <button onclick="createNewPlaylist()" class="mini-btn">New +</button>
-                <button onclick="togglePanel('side-playlist')">&times;</button>
+                <button onclick="createNewPlaylist()" class="mini-btn"><i class="fas fa-plus"></i></button>
+                <button class="close-panel-btn" onclick="togglePanel('side-playlist')"><i class="fas fa-times"></i></button>
             </div>
             <ul id="playlist-container" class="results-list"></ul>
         </div>
 
         <div id="side-themes" class="side-panel">
-            <div class="panel-header"><h3>Настройки</h3><button onclick="togglePanel('side-themes')">&times;</button></div>
+            <div class="panel-header">
+                <h3>Настройки</h3>
+                <button class="close-panel-btn" onclick="togglePanel('side-themes')"><i class="fas fa-times"></i></button>
+            </div>
             <div class="setting-row">
                 <span>Темный режим</span>
                 <label class="switch">
@@ -83,7 +91,10 @@
         </div>
 
         <div id="add-to-playlist-popup" class="side-panel popup">
-            <div class="panel-header"><h3>Добавить в...</h3><button onclick="togglePanel('add-to-playlist-popup')">&times;</button></div>
+            <div class="panel-header">
+                <h3>Добавить в...</h3>
+                <button class="close-panel-btn" onclick="togglePanel('add-to-playlist-popup')"><i class="fas fa-times"></i></button>
+            </div>
             <div id="playlists-to-choose" class="results-list"></div>
         </div>
 
