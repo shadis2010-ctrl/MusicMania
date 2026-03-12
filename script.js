@@ -30,23 +30,13 @@ document.getElementById('search-btn').onclick = async () => {
         const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(q)}&type=video&key=${API_KEY}`;
         const res = await fetch(url);
         const data = await res.json();
-        
-        if (data.error) {
-            console.error("API Error:", data.error.message);
-            alert("Ошибка API: " + data.error.message);
-            return;
-        }
-        renderResults(data.items);
-    } catch (e) { 
-        console.error("Fetch error:", e);
-        alert("Проблема с сетью или API"); 
-    }
+        if (data.items) renderResults(data.items);
+    } catch (e) { alert("Ошибка поиска"); }
 };
 
 function renderResults(items) {
     const container = document.getElementById('search-results');
     container.innerHTML = '';
-    if (!items) return;
     items.forEach(item => {
         const id = item.id.videoId;
         const title = item.snippet.title.replace(/'/g, "");
@@ -54,9 +44,9 @@ function renderResults(items) {
         div.className = 'search-item';
         div.innerHTML = `
             <img src="${item.snippet.thumbnails.default.url}" style="width:50px; border-radius:6px">
-            <div style="flex:1; font-size:12px; font-weight:bold; overflow:hidden">${title.slice(0,30)}</div>
+            <div style="flex:1; font-size:13px; font-weight:500; overflow:hidden">${title.slice(0,35)}...</div>
             <button onclick="event.stopPropagation(); handlePlaylistToggle('${id}', '${title}')" 
-                    style="background:var(--accent); border:none; border-radius:6px; padding:6px; font-size:10px; font-weight:bold">
+                    style="background:var(--accent); border:none; border-radius:8px; padding:8px 12px; font-size:11px; font-weight:bold">
                 ${myPlaylist.find(t => t.id === id) ? 'Убрать' : 'Добавить'}
             </button>
         `;
@@ -83,9 +73,9 @@ function renderPlaylist() {
     container.innerHTML = myPlaylist.map((t, index) => 
         `<li>
             <span style="color:var(--accent); font-weight:bold; margin-right:10px">${index + 1}</span>
-            <span onclick="playFromPlaylist(${index})" style="flex:1; overflow:hidden">${t.title.slice(0, 25)}...</span>
+            <span onclick="playFromPlaylist(${index})" style="flex:1; overflow:hidden; font-size:14px">${t.title.slice(0, 30)}...</span>
             <button onclick="event.stopPropagation(); handlePlaylistToggle('${t.id}', '')" 
-                    style="background:none; border:none; color:#ff4757; font-size:20px">&times;</button>
+                    style="background:none; border:none; color:#ff4757; font-size:24px">&times;</button>
         </li>`
     ).join('');
 }
@@ -129,13 +119,8 @@ function startTick() {
     }, 1000);
 }
 
-document.getElementById('progress-bar').oninput = function() {
-    if (player && player.seekTo) player.seekTo((this.value / 100) * player.getDuration());
-};
-
 function formatTime(sec) {
-    const m = Math.floor(sec / 60);
-    const s = Math.floor(sec % 60);
+    const m = Math.floor(sec / 60); const s = Math.floor(sec % 60);
     return `${m}:${s < 10 ? '0' : ''}${s}`;
 }
 
@@ -143,18 +128,13 @@ function onStateChange(event) {
     const disk = document.getElementById('vinyl-disk');
     const glow = document.getElementById('vinyl-glow');
     const btn = document.getElementById('play-btn');
-    
     if (event.data == 1) { 
-        disk.style.animationPlayState = 'running'; 
-        glow.classList.add('playing');
+        disk.style.animationPlayState = 'running'; glow.classList.add('playing');
         btn.innerHTML = '<i class="fas fa-pause-circle"></i>'; 
     } else { 
-        disk.style.animationPlayState = 'paused'; 
-        glow.classList.remove('playing');
+        disk.style.animationPlayState = 'paused'; glow.classList.remove('playing');
         btn.innerHTML = '<i class="fas fa-play-circle"></i>'; 
     }
-    
-    if (event.data == 0 && currentTrackIndex < myPlaylist.length - 1) playFromPlaylist(currentTrackIndex + 1);
 }
 
 document.getElementById('play-btn').onclick = () => {

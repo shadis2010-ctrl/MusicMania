@@ -47,11 +47,11 @@
 
         <div id="side-search" class="side-panel">
             <div class="panel-header">
-                <h3>Поиск</h3>
-                <button onclick="togglePanel('side-search')">&times;</button>
+                <h3>Поиск музыки</h3>
+                <button class="panel-close-btn" onclick="togglePanel('side-search')">Отмена</button>
             </div>
-            <div class="search-box">
-                <input type="text" id="search-input" placeholder="Найти музыку...">
+            <div class="search-box-large">
+                <input type="text" id="search-input" placeholder="Введите название или автора...">
                 <button id="search-btn"><i class="fas fa-search"></i></button>
             </div>
             <div id="search-results" class="results-list"></div>
@@ -59,16 +59,16 @@
 
         <div id="side-playlist" class="side-panel">
             <div class="panel-header">
-                <h3>Плейлист</h3>
-                <button onclick="togglePanel('side-playlist')">&times;</button>
+                <h3>Ваш плейлист</h3>
+                <button class="panel-close-btn" onclick="togglePanel('side-playlist')">Закрыть</button>
             </div>
             <ul id="playlist-container"></ul>
         </div>
 
         <div id="side-themes" class="side-panel">
             <div class="panel-header">
-                <h3>Темы</h3>
-                <button onclick="togglePanel('side-themes')">&times;</button>
+                <h3>Темы оформления</h3>
+                <button class="panel-close-btn" onclick="togglePanel('side-themes')">Готово</button>
             </div>
             <div class="theme-grid">
                 <button onclick="setTheme('black')" class="t-btn" style="background: #1DB954;"></button>
