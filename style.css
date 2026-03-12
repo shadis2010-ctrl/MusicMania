@@ -1,115 +1,77 @@
 :root { --accent: #2ecc71; --bg: #0d1a0d; --panel: #1a2e1a; --text: #e0ffe0; }
-
-.theme-black { --bg: #000; --panel: #111; --text: #fff; --accent: #1DB954; }
 .theme-white { --bg: #f8f8f8; --panel: #fff; --text: #222; --accent: #2ecc71; }
+.theme-black { --bg: #000; --panel: #111; --text: #fff; --accent: #1DB954; }
 .theme-blue { --bg: #0a192f; --panel: #112240; --text: #fff; --accent: #64ffda; }
 .theme-green { --bg: #0d1a0d; --panel: #1a2e1a; --text: #e0ffe0; --accent: #2ecc71; }
 .theme-red { --bg: #1a0d0d; --panel: #2e1a1a; --text: #fff; --accent: #ff4757; }
 .theme-purple { --bg: #120d1a; --panel: #201a2e; --text: #fff; --accent: #a29bfe; }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { margin: 0; font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; transition: 0.3s; }
 
-body { 
-    margin: 0; font-family: -apple-system, system-ui, sans-serif; 
-    background: var(--bg); color: var(--text); transition: 0.3s; 
-    overflow: hidden; height: 100vh;
-}
+.app-container { height: 100vh; display: flex; flex-direction: column; position: relative; }
 
-.app-container { 
-    height: 100vh; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: space-between;
-}
-
-.mobile-header { 
-    padding: 10px; 
-    text-align: center; 
-    padding-top: env(safe-area-inset-top, 20px); 
-}
-
-.logo { font-family: 'Arial Black', sans-serif; font-size: 20px; text-transform: uppercase; }
+.mobile-header { padding: 10px; text-align: center; padding-top: env(safe-area-inset-top, 20px); flex-shrink: 0; }
+.logo { font-weight: 900; font-size: 22px; letter-spacing: 1px; }
 .logo span { color: var(--accent); }
 
+/* ИСПРАВЛЕННЫЙ ЭКРАН ПЛЕЕРА */
 .player-screen { 
     flex: 1; 
     display: flex; 
-    flex-direction: column; 
     align-items: center; 
     justify-content: center; 
-    padding: 20px; 
+    text-align: center;
 }
+.player-content { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; }
 
+/* НЕОНОВАЯ ПЛАСТИНКА */
+.vinyl-wrapper { position: relative; margin-bottom: 30px; }
 .vinyl { 
-    width: 220px; height: 220px; border-radius: 50%; 
+    width: 260px; height: 260px; border-radius: 50%; 
     background: repeating-radial-gradient(#222, #111 10%, #222 15%);
-    border: 8px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 8px solid #333; 
+    box-shadow: 0 0 25px var(--accent); /* Неон */
     animation: rotate 8s linear infinite; animation-play-state: paused;
 }
-.vinyl-center { 
-    width: 50px; height: 50px; background: var(--accent); border-radius: 50%; 
-    border: 4px solid #111; margin: 77px auto; color: #000; font-weight: bold; 
-    text-align: center; line-height: 42px; font-size: 12px; 
-}
+.vinyl.playing { animation-play-state: running; box-shadow: 0 0 40px var(--accent), 0 0 70px rgba(0,0,0,0.3); }
+.vinyl-center { width: 50px; height: 50px; background: var(--accent); border-radius: 50%; border: 4px solid #111; margin: 97px auto; color: #000; font-weight: bold; line-height: 42px; font-size: 12px; }
 
 @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-.track-info { text-align: center; margin-bottom: 20px; width: 100%; }
-.track-info h2 { font-size: 18px; margin: 10px 0; padding: 0 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.track-info p { opacity: 0.6; font-size: 13px; }
+.track-info h2 { font-size: 20px; margin: 10px 0; padding: 0 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.action-btn { background: none; border: 2px solid var(--accent); color: var(--accent); width: 45px; height: 45px; border-radius: 50%; font-size: 18px; margin-top: 10px; }
 
-.action-btn { 
-    background: none; border: 2px solid var(--accent); color: var(--accent); 
-    width: 40px; height: 40px; border-radius: 50%; font-size: 16px; 
-}
+.controls-section { width: 100%; padding: 0 30px; margin-top: 20px; }
+.main-btns { display: flex; align-items: center; justify-content: center; gap: 35px; margin: 20px 0; }
+.main-btns button { background: none; border: none; color: var(--text); font-size: 32px; }
+.play-trigger { font-size: 65px !important; color: var(--accent) !important; }
 
-.controls-section { width: 100%; max-width: 350px; }
-.main-btns { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 15px 0; }
-.main-btns button { background: none; border: none; color: var(--text); font-size: 30px; }
-.play-trigger { font-size: 60px !important; color: var(--accent) !important; }
+.progress-block { display: flex; align-items: center; gap: 12px; font-size: 12px; }
+input[type=range] { flex: 1; accent-color: var(--accent); height: 5px; }
 
-.progress-block { display: flex; align-items: center; gap: 10px; font-size: 11px; }
-input[type=range] { flex: 1; accent-color: var(--accent); }
-
-/* ПАНЕЛИ */
+/* ПАНЕЛИ И ТАБ-БАР */
 .side-panel {
-    position: fixed; top: 0; left: -100%; width: 100%; 
-    height: calc(100% - 75px - env(safe-area-inset-bottom));
-    background: var(--panel); z-index: 1000; transition: 0.4s ease-in-out;
-    padding: 20px; display: flex; flex-direction: column;
+    position: absolute; bottom: 85px; left: -100%; width: 100%; height: calc(100% - 85px);
+    background: var(--panel); z-index: 1000; transition: 0.3s ease-in-out; padding: 25px;
 }
 .side-panel.active { left: 0; }
-
-.panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.panel-header button { background: none; border: none; color: var(--text); font-size: 35px; }
-
-.search-box { display: flex; gap: 10px; margin-bottom: 20px; }
-.search-box input { flex: 1; padding: 12px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: #fff; }
-.search-box button { background: var(--accent); border: none; padding: 12px; border-radius: 10px; color: #000; }
-
-.results-list, #playlist-container { flex: 1; overflow-y: auto; list-style: none; padding: 0; }
-.search-item, #playlist-container li { 
-    display: flex; align-items: center; gap: 10px; padding: 12px; 
-    background: rgba(255,255,255,0.05); margin-bottom: 10px; border-radius: 10px;
-}
+.side-panel.popup { height: 60%; bottom: 85px; border-radius: 25px 25px 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
 
 .tab-bar { 
-    height: 75px; 
-    background: var(--panel); 
-    border-top: 1px solid rgba(255,255,255,0.1);
-    display: flex; 
-    justify-content: space-around; 
-    align-items: center; 
-    padding-bottom: env(safe-area-inset-bottom, 15px);
-    z-index: 1001;
+    height: 85px; background: var(--panel); border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex; justify-content: space-around; align-items: center; 
+    padding-bottom: env(safe-area-inset-bottom); z-index: 1001;
 }
-.tab-bar button { 
-    background: none; border: none; color: var(--text); 
-    display: flex; flex-direction: column; align-items: center; 
-    gap: 4px; opacity: 0.7; 
-}
-.tab-bar button i { font-size: 20px; }
-.tab-bar button span { font-size: 10px; }
+.tab-bar button { background: none; border: none; color: var(--text); display: flex; flex-direction: column; align-items: center; opacity: 0.6; }
 
-.theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.t-btn { height: 60px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+.setting-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 20px; }
+.mini-btn { background: var(--accent); border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; }
+
+/* Слайдер */
+.switch { position: relative; width: 50px; height: 26px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #444; transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background: var(--accent); }
+input:checked + .slider:before { transform: translateX(24px); }
