@@ -1,4 +1,4 @@
-const API_KEY = 'ВСТАВЬ_СВОЙ_КЛЮЧ_СЮДА'; 
+const API_KEY = 'AIzaSyB780t5uL3VGWS-frrluarI_H-VMO7NoJA'; 
 let player;
 let myPlaylist = JSON.parse(localStorage.getItem('myPlaylist')) || [];
 let currentTrackIndex = -1;
