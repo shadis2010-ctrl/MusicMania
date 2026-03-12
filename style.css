@@ -17,7 +17,7 @@ body { margin: 0; font-family: -apple-system, system-ui, sans-serif; background:
 
 .player-screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; }
 
-/* ВИНИЛ И НЕОН */
+/* ВИНИЛ */
 .vinyl-wrapper { position: relative; width: 240px; height: 240px; display: flex; align-items: center; justify-content: center; }
 .vinyl-glow { position: absolute; width: 210px; height: 210px; background: var(--accent); border-radius: 50%; filter: blur(45px); opacity: 0; transition: 0.5s; z-index: 0; }
 .vinyl-glow.playing { opacity: 0.6; animation: glow-pulse 2s infinite ease-in-out; }
@@ -31,17 +31,17 @@ body { margin: 0; font-family: -apple-system, system-ui, sans-serif; background:
 .track-info { text-align: center; margin-bottom: 20px; width: 100%; }
 .track-info h2 { font-size: 18px; margin: 10px 0; padding: 0 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* КНОПКИ УПРАВЛЕНИЯ */
+/* УПРАВЛЕНИЕ */
 .controls-section { width: 100%; max-width: 350px; padding: 0 20px; }
-.main-btns-container { position: relative; display: flex; align-items: center; justify-content: center; margin-top: 10px; }
+.main-btns-container { position: relative; display: flex; align-items: center; justify-content: center; margin-top: 10px; height: 60px; }
 
 .main-btns { display: flex; align-items: center; justify-content: center; gap: 25px; }
 .main-btns button { background: none; border: none; color: var(--text); font-size: 28px; cursor: pointer; transition: 0.2s; }
-.play-trigger { font-size: 55px !important; color: var(--accent) !important; filter: drop-shadow(0 0 10px rgba(0,0,0,0.3)); }
+.play-trigger { font-size: 55px !important; color: var(--accent) !important; filter: drop-shadow(0 0 10px rgba(0,0,0,0.2)); }
 
-/* Кнопка Добавить/Убрать справа */
-.quick-action-btn { position: absolute; right: 0; background: none; border: 2.5px solid var(--accent); color: var(--accent); width: 42px; height: 42px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-.quick-action-btn.added { background: var(--accent); color: #000; }
+/* УМНАЯ КНОПКА ДОБАВИТЬ/УБРАТЬ */
+.quick-action-btn { position: absolute; right: 0; background: none; border: 2.5px solid var(--accent); color: var(--accent); width: 44px; height: 44px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.quick-action-btn.added { background: var(--accent); color: #000; transform: scale(1.1); }
 
 .progress-block { display: flex; align-items: center; gap: 10px; font-size: 10px; margin-bottom: 10px; }
 input[type=range] { flex: 1; accent-color: var(--accent); height: 6px; cursor: pointer; }

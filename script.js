@@ -3,7 +3,7 @@ let player;
 let library = JSON.parse(localStorage.getItem('mm_library')) || [{name: "Мой Плейлист", tracks: []}];
 let activePlaylistIndex = 0;
 let currentTrackIndexInPlaylist = -1;
-let currentTrackData = null; // Данные играющего сейчас трека
+let currentTrackData = null; 
 let tempTrackToAdd = null; 
 
 function onYouTubeIframeAPIReady() {
@@ -67,10 +67,10 @@ function openPlaylist(index) {
     
     area.innerHTML = library[index].tracks.map((t, i) => `
         <div class="list-item">
-            <div style="flex:1" onclick="playFromLibrary(${index}, ${i})">
+            <div style="flex:1" onclick="playFromLibrary(${index}, i)">
                 <div style="font-size:13px; font-weight:500">${t.title}</div>
             </div>
-            <button onclick="removeFromPlaylist(${i})" style="background:none; border:none; color:#ff4757; font-size:22px">&times;</button>
+            <button onclick="removeFromPlaylistDirectly('${t.id}')" style="background:none; border:none; color:#ff4757; font-size:22px">&times;</button>
         </div>
     `).join('') || '<p style="text-align:center; opacity:0.5; margin-top:20px;">Плейлист пуст</p>';
 }
@@ -118,19 +118,27 @@ function openAddModal(id, title) {
 }
 
 function addTrackToPlaylist(plIndex) {
-    library[plIndex].tracks.push(tempTrackToAdd);
-    saveLibrary();
+    // Проверка, чтобы не дублировать в одном плейлисте
+    if(!library[plIndex].tracks.find(t => t.id === tempTrackToAdd.id)) {
+        library[plIndex].tracks.push(tempTrackToAdd);
+        saveLibrary();
+    }
     closeModal();
     updateQuickAddBtn();
 }
 
 function closeModal() { document.getElementById('add-to-modal').style.display = 'none'; }
 
-function removeFromPlaylist(trackIdx) {
-    library[activePlaylistIndex].tracks.splice(trackIdx, 1);
+// Удаление трека по ID из всех плейлистов (для кнопки «убрать»)
+function removeFromPlaylistDirectly(trackId) {
+    library.forEach(pl => {
+        pl.tracks = pl.tracks.filter(t => t.id !== trackId);
+    });
     saveLibrary();
-    openPlaylist(activePlaylistIndex);
     updateQuickAddBtn();
+    // Если мы сейчас смотрим этот плейлист - обновить экран
+    const tools = document.getElementById('playlist-manager-tools');
+    if(tools && tools.style.display === "none") openPlaylist(activePlaylistIndex);
 }
 
 // --- ПЛЕЕР И КНОПКА PLAY ---
@@ -156,6 +164,7 @@ function playFromLibrary(plIdx, trackIdx) {
     togglePanel('');
 }
 
+// ТА САМАЯ УМНАЯ КНОПКА
 function updateQuickAddBtn() {
     if (!currentTrackData) return;
     const btn = document.getElementById('quick-add-btn');
@@ -164,7 +173,9 @@ function updateQuickAddBtn() {
     if (isAdded) {
         btn.innerHTML = '<i class="fas fa-check"></i>';
         btn.classList.add('added');
-        btn.onclick = () => alert("Трек уже есть в вашей библиотеке!");
+        btn.onclick = () => {
+            removeFromPlaylistDirectly(currentTrackData.id);
+        };
     } else {
         btn.innerHTML = '<i class="fas fa-plus"></i>';
         btn.classList.remove('added');
@@ -211,7 +222,7 @@ document.getElementById('prev-btn').onclick = () => {
     }
 };
 
-// --- ВСПОМОГАТЕЛЬНОЕ ---
+// --- СЛУЖЕБНОЕ ---
 function startTick() {
     setInterval(() => {
         if (player && player.getCurrentTime) {
