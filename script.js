@@ -1,10 +1,11 @@
 const API_KEY = 'AIzaSyB780t5uL3VGWS-frrluarI_H-VMO7NoJA'; 
 let player;
-let library = JSON.parse(localStorage.getItem('mm_library')) || [{name: "Мой Плейлист", tracks: []}];
+let library = JSON.parse(localStorage.getItem('mm_library')) || [{name: "Мои любимые", tracks: []}];
 let activePlaylistIndex = 0;
 let currentTrackIndexInPlaylist = -1;
 let currentTrackData = null; 
 let tempTrackToAdd = null; 
+let isShuffle = false;
 
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('youtube-engine', {
@@ -67,7 +68,7 @@ function openPlaylist(index) {
     
     area.innerHTML = library[index].tracks.map((t, i) => `
         <div class="list-item">
-            <div style="flex:1" onclick="playFromLibrary(${index}, i)">
+            <div style="flex:1" onclick="playFromLibrary(${index}, ${i})">
                 <div style="font-size:13px; font-weight:500">${t.title}</div>
             </div>
             <button onclick="removeFromPlaylistDirectly('${t.id}')" style="background:none; border:none; color:#ff4757; font-size:22px">&times;</button>
@@ -118,7 +119,6 @@ function openAddModal(id, title) {
 }
 
 function addTrackToPlaylist(plIndex) {
-    // Проверка, чтобы не дублировать в одном плейлисте
     if(!library[plIndex].tracks.find(t => t.id === tempTrackToAdd.id)) {
         library[plIndex].tracks.push(tempTrackToAdd);
         saveLibrary();
@@ -129,19 +129,17 @@ function addTrackToPlaylist(plIndex) {
 
 function closeModal() { document.getElementById('add-to-modal').style.display = 'none'; }
 
-// Удаление трека по ID из всех плейлистов (для кнопки «убрать»)
 function removeFromPlaylistDirectly(trackId) {
     library.forEach(pl => {
         pl.tracks = pl.tracks.filter(t => t.id !== trackId);
     });
     saveLibrary();
     updateQuickAddBtn();
-    // Если мы сейчас смотрим этот плейлист - обновить экран
     const tools = document.getElementById('playlist-manager-tools');
     if(tools && tools.style.display === "none") openPlaylist(activePlaylistIndex);
 }
 
-// --- ПЛЕЕР И КНОПКА PLAY ---
+// --- ЛОГИКА ПЛЕЕРА ---
 
 function playInstant(id, title) {
     currentTrackData = { id, title };
@@ -164,18 +162,33 @@ function playFromLibrary(plIdx, trackIdx) {
     togglePanel('');
 }
 
-// ТА САМАЯ УМНАЯ КНОПКА
+// Перемешивание
+const shuffleBtn = document.getElementById('shuffle-btn');
+shuffleBtn.onclick = () => {
+    isShuffle = !isShuffle;
+    shuffleBtn.classList.toggle('active', isShuffle);
+};
+
+function getNextTrackIndex() {
+    const pl = library[activePlaylistIndex].tracks;
+    if (pl.length <= 1) return currentTrackIndexInPlaylist;
+    if (isShuffle) {
+        let rand;
+        do { rand = Math.floor(Math.random() * pl.length); } while (rand === currentTrackIndexInPlaylist);
+        return rand;
+    }
+    return (currentTrackIndexInPlaylist + 1) % pl.length;
+}
+
+// Кнопка добавить/убрать
 function updateQuickAddBtn() {
     if (!currentTrackData) return;
     const btn = document.getElementById('quick-add-btn');
     const isAdded = library.some(pl => pl.tracks.some(t => t.id === currentTrackData.id));
-    
     if (isAdded) {
         btn.innerHTML = '<i class="fas fa-check"></i>';
         btn.classList.add('added');
-        btn.onclick = () => {
-            removeFromPlaylistDirectly(currentTrackData.id);
-        };
+        btn.onclick = () => removeFromPlaylistDirectly(currentTrackData.id);
     } else {
         btn.innerHTML = '<i class="fas fa-plus"></i>';
         btn.classList.remove('added');
@@ -199,9 +212,7 @@ function onStateChange(event) {
     }
     
     if (event.data == YT.PlayerState.ENDED && currentTrackIndexInPlaylist !== -1) {
-        if (currentTrackIndexInPlaylist < library[activePlaylistIndex].tracks.length - 1) {
-            playFromLibrary(activePlaylistIndex, currentTrackIndexInPlaylist + 1);
-        }
+        playFromLibrary(activePlaylistIndex, getNextTrackIndex());
     }
 }
 
@@ -211,18 +222,14 @@ document.getElementById('play-btn').onclick = () => {
 };
 
 document.getElementById('next-btn').onclick = () => {
-    if (currentTrackIndexInPlaylist !== -1 && currentTrackIndexInPlaylist < library[activePlaylistIndex].tracks.length - 1) {
-        playFromLibrary(activePlaylistIndex, currentTrackIndexInPlaylist + 1);
-    }
+    if (currentTrackIndexInPlaylist !== -1) playFromLibrary(activePlaylistIndex, getNextTrackIndex());
 };
 
 document.getElementById('prev-btn').onclick = () => {
-    if (currentTrackIndexInPlaylist > 0) {
-        playFromLibrary(activePlaylistIndex, currentTrackIndexInPlaylist - 1);
-    }
+    if (currentTrackIndexInPlaylist > 0) playFromLibrary(activePlaylistIndex, currentTrackIndexInPlaylist - 1);
 };
 
-// --- СЛУЖЕБНОЕ ---
+// --- СЕРВИСНЫЕ ФУНКЦИИ ---
 function startTick() {
     setInterval(() => {
         if (player && player.getCurrentTime) {

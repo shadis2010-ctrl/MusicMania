@@ -38,11 +38,14 @@
                 </div>
 
                 <div class="main-btns-container">
+                    <button id="shuffle-btn" class="secondary-action-btn"><i class="fas fa-random"></i></button>
+
                     <div class="main-btns">
                         <button id="prev-btn"><i class="fas fa-step-backward"></i></button>
                         <button id="play-btn" class="play-trigger"><i class="fas fa-play"></i></button>
                         <button id="next-btn"><i class="fas fa-step-forward"></i></button>
                     </div>
+
                     <button id="quick-add-btn" class="quick-action-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
@@ -62,7 +65,7 @@
 
         <div id="side-playlist" class="side-panel">
             <div class="panel-header">
-                <h3 id="playlist-view-title">Мои Плейлисты</h3>
+                <h3 id="playlist-view-title">Библиотека</h3>
                 <button class="panel-close-btn" onclick="closePlaylistView()">Закрыть</button>
             </div>
             <div id="playlist-manager-tools">
@@ -91,7 +94,7 @@
 
         <nav class="tab-bar">
             <button onclick="togglePanel('side-search')"><i class="fas fa-search"></i><span>Поиск</span></button>
-            <button onclick="showPlaylistManager()"><i class="fas fa-folder-plus"></i><span>Библиотека</span></button>
+            <button onclick="showPlaylistManager()"><i class="fas fa-folder-plus"></i><span>Плейлисты</span></button>
             <button onclick="togglePanel('side-themes')"><i class="fas fa-palette"></i><span>Темы</span></button>
         </nav>
     </div>
