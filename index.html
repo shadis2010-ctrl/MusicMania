@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>MusicMania Pro</title>
+    <title>MusicMania Mobile</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -13,37 +13,33 @@
     
     <div class="app-container">
         <header class="mobile-header">
-            <div class="logo">MUSIC<span>MANIA</span></div>
+            <div class="logo">Music<span>Mania</span></div>
         </header>
 
         <main class="player-screen">
-            <div class="player-content">
-                <div class="vinyl-wrapper">
-                    <div id="vinyl-disk" class="vinyl">
-                        <div class="vinyl-center">MM</div>
-                    </div>
+            <div id="glow-wrapper" class="vinyl-wrapper">
+                <div id="vinyl-disk" class="vinyl">
+                    <div class="vinyl-center">MM</div>
                 </div>
-                
-                <div class="track-info">
-                    <h2 id="player-title">Готов к музыке</h2>
-                    <p id="player-author">MusicMania Pro</p>
-                    <button id="add-to-list-btn" class="main-add-btn">
-                        <i class="fas fa-plus"></i>
-                    </button>
+            </div>
+            
+            <div class="track-info">
+                <h2 id="player-title">Готов к музыке</h2>
+                <p id="player-author">MusicMania Mobile</p>
+                <button id="toggle-playlist-btn" class="action-btn"><i class="fas fa-plus"></i></button>
+            </div>
+
+            <div class="controls-section">
+                <div class="progress-block">
+                    <span id="current-time">0:00</span>
+                    <input type="range" id="progress-bar" min="0" max="100" value="0">
+                    <span id="duration">0:00</span>
                 </div>
 
-                <div class="controls-section">
-                    <div class="progress-block">
-                        <span id="current-time">0:00</span>
-                        <input type="range" id="progress-bar" min="0" max="100" value="0">
-                        <span id="duration">0:00</span>
-                    </div>
-
-                    <div class="main-btns">
-                        <button id="prev-btn"><i class="fas fa-step-backward"></i></button>
-                        <button id="play-btn" class="play-trigger"><i class="fas fa-play"></i></button>
-                        <button id="next-btn"><i class="fas fa-step-forward"></i></button>
-                    </div>
+                <div class="main-btns">
+                    <button id="prev-btn"><i class="fas fa-step-backward"></i></button>
+                    <button id="play-btn" class="play-trigger"><i class="fas fa-play"></i></button>
+                    <button id="next-btn"><i class="fas fa-step-forward"></i></button>
                 </div>
             </div>
         </main>
@@ -51,7 +47,7 @@
         <div id="side-search" class="side-panel">
             <div class="panel-header">
                 <h3>Поиск</h3>
-                <button class="close-panel-btn" onclick="togglePanel('side-search')"><i class="fas fa-times"></i></button>
+                <button class="close-btn" onclick="togglePanel('side-search')">&times;</button>
             </div>
             <div class="search-box">
                 <input type="text" id="search-input" placeholder="Найти музыку...">
@@ -62,40 +58,25 @@
 
         <div id="side-playlist" class="side-panel">
             <div class="panel-header">
-                <select id="playlist-selector" onchange="switchPlaylist(this.value)"></select>
-                <button onclick="createNewPlaylist()" class="mini-btn"><i class="fas fa-plus"></i></button>
-                <button class="close-panel-btn" onclick="togglePanel('side-playlist')"><i class="fas fa-times"></i></button>
+                <h3>Плейлист</h3>
+                <button class="close-btn" onclick="togglePanel('side-playlist')">&times;</button>
             </div>
-            <ul id="playlist-container" class="results-list"></ul>
+            <ul id="playlist-container"></ul>
         </div>
 
         <div id="side-themes" class="side-panel">
             <div class="panel-header">
-                <h3>Настройки</h3>
-                <button class="close-panel-btn" onclick="togglePanel('side-themes')"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="setting-row">
-                <span>Темный режим</span>
-                <label class="switch">
-                    <input type="checkbox" id="dark-mode-toggle" checked onchange="toggleDarkWhite(this.checked)">
-                    <span class="slider"></span>
-                </label>
+                <h3>Темы</h3>
+                <button class="close-btn" onclick="togglePanel('side-themes')">&times;</button>
             </div>
             <div class="theme-grid">
+                <button onclick="setTheme('black')" class="t-btn" style="background: #1DB954;"></button>
+                <button onclick="setTheme('white')" class="t-btn" style="background: #ffffff;"></button>
                 <button onclick="setTheme('blue')" class="t-btn" style="background: #001f3f;"></button>
                 <button onclick="setTheme('green')" class="t-btn" style="background: #2ecc71;"></button>
                 <button onclick="setTheme('red')" class="t-btn" style="background: #ff4757;"></button>
                 <button onclick="setTheme('purple')" class="t-btn" style="background: #a29bfe;"></button>
-                <button onclick="setTheme('yellow')" class="t-btn" style="background: #f1c40f;"></button>
             </div>
-        </div>
-
-        <div id="add-to-playlist-popup" class="side-panel popup">
-            <div class="panel-header">
-                <h3>Добавить в...</h3>
-                <button class="close-panel-btn" onclick="togglePanel('add-to-playlist-popup')"><i class="fas fa-times"></i></button>
-            </div>
-            <div id="playlists-to-choose" class="results-list"></div>
         </div>
 
         <nav class="tab-bar">
