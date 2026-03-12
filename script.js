@@ -15,16 +15,23 @@ function togglePanel(panelId) {
     const panels = ['side-search', 'side-playlist', 'side-themes', 'add-to-playlist-popup'];
     panels.forEach(id => {
         const el = document.getElementById(id);
-        if (el) id === panelId ? el.classList.toggle('active') : el.classList.remove('active');
+        if (el) {
+            if (id === panelId) {
+                el.classList.toggle('active');
+            } else {
+                el.classList.remove('active');
+            }
+        }
     });
 }
 
 function setTheme(name) {
     document.body.className = 'theme-' + name;
     document.getElementById('dark-mode-toggle').checked = (name !== 'white');
-    const root = document.querySelector(':root');
+    
+    // Принудительно обновляем переменную акцента (для надежности)
     const colors = { 'blue': '#64ffda', 'green': '#2ecc71', 'red': '#ff4757', 'purple': '#a29bfe', 'yellow': '#f1c40f', 'black': '#1DB954' };
-    if(colors[name]) root.style.setProperty('--accent', colors[name]);
+    if(colors[name]) document.documentElement.style.setProperty('--accent', colors[name]);
 }
 
 function toggleDarkWhite(isDark) {
@@ -52,7 +59,7 @@ function renderResults(items) {
         div.innerHTML = `
             <img src="${item.snippet.thumbnails.default.url}" style="width:40px; border-radius:5px">
             <div style="flex:1; font-size:11px; font-weight:bold">${title.slice(0,30)}</div>
-            <button onclick="event.stopPropagation(); showAddToPlaylistMenu('${id}', '${title}')" style="background:var(--accent); border:none; border-radius:5px; padding:5px">+</button>
+            <button onclick="event.stopPropagation(); showAddToPlaylistMenu('${id}', '${title}')" style="background:var(--accent); border:none; border-radius:5px; padding:5px; color:#000"><i class="fas fa-plus"></i></button>
         `;
         div.onclick = () => playMusic(id, title);
         container.appendChild(div);
@@ -62,7 +69,10 @@ function renderResults(items) {
 function showAddToPlaylistMenu(id, title) {
     const container = document.getElementById('playlists-to-choose');
     container.innerHTML = Object.keys(allPlaylists).map(name => `
-        <div class="search-item" onclick="addToSpecificPlaylist('${name}', '${id}', '${title}')"><span>${name}</span></div>
+        <div class="search-item" onclick="addToSpecificPlaylist('${name}', '${id}', '${title}')">
+            <span style="flex:1">${name}</span>
+            <i class="fas fa-chevron-right" style="color:var(--accent)"></i>
+        </div>
     `).join('');
     togglePanel('add-to-playlist-popup');
 }
@@ -106,8 +116,8 @@ function renderPlaylist() {
     const list = allPlaylists[currentPlaylistName] || [];
     container.innerHTML = list.map((t, index) => `
         <li>
-            <span onclick="playFromPlaylist(${index})" style="flex:1">${t.title.slice(0, 30)}</span>
-            <button onclick="removeFromPlaylist(${index})" style="background:none; border:none; color:#ff4757">&times;</button>
+            <span onclick="playFromPlaylist(${index})" style="flex:1">${t.title.slice(0, 30)}...</span>
+            <button class="remove-btn" onclick="removeFromPlaylist(${index})"><i class="fas fa-trash-alt"></i></button>
         </li>
     `).join('');
 }
