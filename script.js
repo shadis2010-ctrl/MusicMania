@@ -6,8 +6,40 @@ let currentPlayingId = '';
 
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('youtube-engine', {
+        playerVars: { 'playsinline': 1 },
         events: { 'onStateChange': onStateChange, 'onReady': startTick }
     });
+}
+
+// Media Session для работы кнопок на заблокированном экране
+function updateMediaMetadata(title) {
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: title,
+            artist: 'MusicMania',
+            artwork: [{ src: 'https://cdn-icons-png.flaticon.com/512/3844/3844724.png', sizes: '512x512', type: 'image/png' }]
+        });
+        navigator.mediaSession.setActionHandler('play', () => player.playVideo());
+        navigator.mediaSession.setActionHandler('pause', () => player.pauseVideo());
+        navigator.mediaSession.setActionHandler('previoustrack', () => document.getElementById('prev-btn').click());
+        navigator.mediaSession.setActionHandler('nexttrack', () => document.getElementById('next-btn').click());
+    }
+}
+
+function playMusic(id, title) {
+    currentPlayingId = id;
+    
+    // Активируем тишину для фона
+    const silentAudio = document.getElementById('silent-audio');
+    silentAudio.play().catch(() => {});
+
+    if (player && player.loadVideoById) {
+        player.loadVideoById(id);
+        document.getElementById('player-title').innerText = title;
+        currentTrackIndex = myPlaylist.findIndex(t => t.id === id);
+        updateActionBtn();
+        updateMediaMetadata(title);
+    }
 }
 
 function togglePanel(panelId) {
@@ -29,7 +61,6 @@ document.getElementById('search-btn').onclick = async () => {
     try {
         const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(q)}&type=video&key=${API_KEY}`);
         const data = await res.json();
-        if(data.error) { alert("Ошибка API: " + data.error.message); return; }
         renderResults(data.items);
     } catch (e) { alert("Ошибка сети"); }
 };
@@ -78,16 +109,6 @@ function renderPlaylist() {
                     style="background:none; border:none; color:#ff4757; font-size:20px">&times;</button>
         </li>`
     ).join('');
-}
-
-function playMusic(id, title) {
-    currentPlayingId = id;
-    if (player && player.loadVideoById) {
-        player.loadVideoById(id);
-        document.getElementById('player-title').innerText = title;
-        currentTrackIndex = myPlaylist.findIndex(t => t.id === id);
-        updateActionBtn();
-    }
 }
 
 function updateActionBtn() {
