@@ -1,6 +1,6 @@
 const API_KEY = 'AIzaSyB780t5uL3VGWS-frrluarI_H-VMO7NoJA'; 
 let player;
-let library = JSON.parse(localStorage.getItem('mm_library')) || [{name: "Любимые", tracks: []}];
+let library = JSON.parse(localStorage.getItem('mm_library')) || [{name: "Мои любимые", tracks: []}];
 let activePlaylistIndex = 0;
 let currentTrackIndexInPlaylist = -1;
 let currentTrackData = null; 
@@ -10,7 +10,7 @@ let isShuffle = false;
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('youtube-engine', {
         height: '0', width: '0',
-        playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1, 'fs': 0 },
+        playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1, 'fs': 0, 'rel': 0 },
         events: { 'onStateChange': onStateChange, 'onReady': startTick }
     });
 }
@@ -30,7 +30,7 @@ function showPlaylistManager() {
     tools.style.display = "block";
     area.innerHTML = library.map((pl, index) => `
         <div class="list-item">
-            <i class="fas fa-folder" style="color:var(--accent)"></i>
+            <i class="fas fa-folder" style="color:var(--accent); font-size: 18px;"></i>
             <div style="flex:1" onclick="openPlaylist(${index})">
                 <div style="font-weight:bold">${pl.name}</div>
                 <div style="font-size:11px; opacity:0.5">${pl.tracks.length} треков</div>
@@ -51,7 +51,7 @@ function createNewPlaylist() {
 }
 
 function deletePlaylist(index) {
-    if (library.length <= 1 || !confirm("Удалить плейлист?")) return;
+    if (library.length <= 1 || !confirm("Удалить этот плейлист?")) return;
     library.splice(index, 1);
     saveLibrary();
     showPlaylistManager();
@@ -69,11 +69,12 @@ function openPlaylist(index) {
             </div>
             <button onclick="removeFromPlaylistDirectly('${t.id}')" style="background:none; border:none; color:#ff4757; font-size:22px">&times;</button>
         </div>
-    `).join('') || '<p style="text-align:center; opacity:0.5; margin-top:20px;">Пусто</p>';
+    `).join('') || '<p style="text-align:center; opacity:0.3; margin-top:20px;">Плейлист пуст</p>';
 }
 
 function closePlaylistView() {
-    document.getElementById('playlist-manager-tools').style.display === "none" ? showPlaylistManager() : togglePanel('');
+    const tools = document.getElementById('playlist-manager-tools');
+    tools.style.display === "none" ? showPlaylistManager() : togglePanel('');
 }
 
 // --- ПОИСК ---
@@ -94,18 +95,18 @@ function renderSearchResults(items) {
             <div class="list-item">
                 <img src="${item.snippet.thumbnails.default.url}" style="width:50px; border-radius:10px">
                 <div style="flex:1; font-size:13px; font-weight:500" onclick="playInstant('${id}', '${title}')">${title}</div>
-                <button onclick="openAddModal('${id}', '${title}')" style="background:var(--accent); border:none; border-radius:10px; padding:10px;"><i class="fas fa-plus"></i></button>
+                <button onclick="openAddModal('${id}', '${title}')" style="background:var(--accent); border:none; border-radius:10px; padding:10px; color:#000"><i class="fas fa-plus"></i></button>
             </div>
         `;
     }).join('');
 }
 
-// --- ДОБАВЛЕНИЕ/УДАЛЕНИЕ ---
+// --- УПРАВЛЕНИЕ КНОПКОЙ ДОБАВЛЕНИЯ ---
 function openAddModal(id, title) {
     tempTrackToAdd = { id, title };
     const list = document.getElementById('target-playlist-list');
     list.innerHTML = library.map((pl, i) => `
-        <div onclick="addTrackToPlaylist(${i})" style="padding:16px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:15px;">
+        <div onclick="addTrackToPlaylist(${i})" style="padding:16px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:15px; cursor:pointer;">
             ${pl.name}
         </div>
     `).join('');
@@ -130,7 +131,7 @@ function removeFromPlaylistDirectly(id) {
     if(document.getElementById('playlist-manager-tools').style.display === "none") openPlaylist(activePlaylistIndex);
 }
 
-// --- УПРАВЛЕНИЕ ПЛЕЕРОМ ---
+// --- ПЛЕЕР ---
 function playInstant(id, title) {
     currentTrackData = { id, title };
     player.loadVideoById(id);
@@ -152,14 +153,14 @@ function playFromLibrary(plIdx, trackIdx) {
     togglePanel('');
 }
 
-// ПЕРЕМЕШИВАНИЕ
+// SHUFFLE
 const shuffleBtn = document.getElementById('shuffle-btn');
 shuffleBtn.onclick = () => {
     isShuffle = !isShuffle;
     shuffleBtn.classList.toggle('active', isShuffle);
 };
 
-function getNextIndex() {
+function getNextIdx() {
     const pl = library[activePlaylistIndex].tracks;
     if (pl.length <= 1) return currentTrackIndexInPlaylist;
     if (isShuffle) {
@@ -169,23 +170,17 @@ function getNextIndex() {
     return (currentTrackIndexInPlaylist + 1) % pl.length;
 }
 
-// КНОПКА PLAY (ИСПРАВЛЕНА)
+// КНОПКА PLAY
 document.getElementById('play-btn').onclick = function() {
     const state = player.getPlayerState();
-    if (state === YT.PlayerState.PLAYING) {
-        player.pauseVideo();
-    } else {
-        player.playVideo();
-    }
+    state === 1 ? player.pauseVideo() : player.playVideo();
 };
 
-// ОБРАБОТКА СОСТОЯНИЙ (ИСПРАВЛЕНА)
 function onStateChange(event) {
     const disk = document.getElementById('vinyl-disk');
     const glow = document.getElementById('vinyl-glow');
     const playBtn = document.getElementById('play-btn');
     
-    // 1 = PLAYING, 2 = PAUSED
     if (event.data === 1) { 
         disk.style.animationPlayState = 'running'; 
         glow.classList.add('playing');
@@ -196,9 +191,8 @@ function onStateChange(event) {
         playBtn.innerHTML = '<i class="fas fa-play"></i>'; 
     }
     
-    // Если трек закончился
     if (event.data === 0 && currentTrackIndexInPlaylist !== -1) {
-        playFromLibrary(activePlaylistIndex, getNextIndex());
+        playFromLibrary(activePlaylistIndex, getNextIdx());
     }
 }
 
@@ -212,13 +206,14 @@ function updateQuickAddBtn() {
 }
 
 document.getElementById('next-btn').onclick = () => {
-    if (currentTrackIndexInPlaylist !== -1) playFromLibrary(activePlaylistIndex, getNextIndex());
+    if (currentTrackIndexInPlaylist !== -1) playFromLibrary(activePlaylistIndex, getNextIdx());
 };
 
 document.getElementById('prev-btn').onclick = () => {
     if (currentTrackIndexInPlaylist > 0) playFromLibrary(activePlaylistIndex, currentTrackIndexInPlaylist - 1);
 };
 
+// ТАЙМЕР И ПРОГРЕСС
 function startTick() {
     setInterval(() => {
         if (player && player.getCurrentTime) {
